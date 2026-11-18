@@ -37,7 +37,7 @@ describe("useNetworkJsonResource", () => {
 
             expect(result.current.loading).toBe(false);
             expect(result.current.status).toBe(200);
-            expect(result.current.error).toBeNull();
+            expect(result.current.error).toBeUndefined();
             expect(calls).toHaveLength(1);
             expect(calls[0]!.init.method).toBe("GET");
             expect(calls[0]!.url.href).toBe("http://localhost:3000/api/item");
@@ -59,7 +59,7 @@ describe("useNetworkJsonResource", () => {
             await Bun.sleep(20);
 
             expect(calls).toHaveLength(0);
-            expect(result.current).toMatchObject({ loading: false, result: null, status: null, error: null });
+            expect(result.current).toMatchObject({ loading: false, result: undefined, status: undefined, error: undefined });
         });
 
         test("refetches when the url changes", async () => {
@@ -110,7 +110,7 @@ describe("useNetworkJsonResource", () => {
             );
 
             expect(await reload(result)).toBe(false);
-            expect(result.current.result).toBeNull();
+            expect(result.current.result).toBeUndefined();
             expect(result.current.status).toBe(200);
         });
 
@@ -135,7 +135,7 @@ describe("useNetworkJsonResource", () => {
             expect(await reload(result)).toBe(true);
             expect(result.current).toMatchObject({
                 loading: false,
-                result: null,
+                result: undefined,
                 status: 403,
                 error: { message: "Nope" }
             });
@@ -143,14 +143,14 @@ describe("useNetworkJsonResource", () => {
     });
 
     describe("network failures", () => {
-        test("reload() resolves false and status stays null", async () => {
+        test("reload() resolves false and status stays undefined", async () => {
             mockFetch(() => { throw networkError(); });
 
             const { result } = renderHook(() => useNetworkJsonResource({ url: "/api/item", autoFetch: false }));
 
             expect(await reload(result)).toBe(false);
-            expect(result.current.status).toBeNull();
-            expect(result.current.result).toBeNull();
+            expect(result.current.status).toBeUndefined();
+            expect(result.current.result).toBeUndefined();
         });
 
         test("loading is false after a network failure", async () => {
@@ -261,8 +261,8 @@ describe("useNetworkJsonResource", () => {
             act(() => { result.current.reload(); });
 
             expect(result.current.loading).toBe(true);
-            expect(result.current.result).toBeNull();
-            expect(result.current.status).toBeNull();
+            expect(result.current.result).toBeUndefined();
+            expect(result.current.status).toBeUndefined();
         });
 
         test("when true, keeps the previous result while reloading", async () => {
@@ -297,7 +297,7 @@ describe("useNetworkJsonResource", () => {
             await reload(result);
 
             expect(result.current.result).toEqual({ v: 1 });
-            expect(result.current.error).toBeNull();
+            expect(result.current.error).toBeUndefined();
         });
     });
 

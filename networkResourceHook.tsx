@@ -66,19 +66,19 @@ interface NetworkJsonResourceHook<Schema extends ZodType> {
     /**
      * Last result from the network request, in the specified Zod schema
      */
-    result: z.infer<Schema> | null,
+    result: z.infer<Schema> | undefined,
 
     /**
      * NetworkResource error returned from the request
      */
-    error: NetworkResource.ErrorType | null,
+    error: NetworkResource.ErrorType | undefined,
 
     /**
      * HTTP status code of the response.
      * 
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
      */
-    status: number | null,
+    status: number | undefined,
 
     /**
      * Re-sends the request to update the value stored in the hook.
@@ -104,9 +104,9 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
     cachePrevious ??= false;
     
     const [ loading, setLoading ] = useState<boolean>(false);
-    const [ status, setStatus ] = useState<number | null>(null);
-    const [ result, setResult ] = useState<z.infer<Schema> | null>(null);
-    const [ error, setError ] = useState<NetworkResource.ErrorType | null>(null);
+    const [ status, setStatus ] = useState<number | undefined>();
+    const [ result, setResult ] = useState<z.infer<Schema> | undefined>();
+    const [ error, setError ] = useState<NetworkResource.ErrorType | undefined>();
     
     const attempts = useRef(0);
     useEffect(() => { attempts.current = 0 }, [ url ]);
@@ -128,9 +128,9 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
         setLoading(true);
 
         if(!cachePrevious) {
-            setResult(null);
-            setError(null);
-            setStatus(null);
+            setResult(undefined);
+            setError(undefined);
+            setStatus(undefined);
         }
 
         let successfulFetch = false;
@@ -148,7 +148,7 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
             if(response.error) {
                 setError(response.error);
             } else {
-                if(cachePrevious) setError(null);
+                if(cachePrevious) setError(undefined);
 
                 if(schema) {
                     setResult(schema.parse(response.content));
@@ -161,12 +161,12 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
                 console.error(e);
             }
 
-            setResult(null);
-            setError(null);
+            setResult(undefined);
+            setError(undefined);
 
             return false;
         } finally {
-            if(!successfulFetch) setStatus(null);
+            if(!successfulFetch) setStatus(undefined);
             setLoading(false);
         }
 
