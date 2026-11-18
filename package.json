@@ -1,0 +1,19 @@
+{
+  "name": "react-zod-networking",
+  "module": "index.tsx",
+  "type": "module",
+  "scripts": {
+    "typecheck": "bun check"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.3.0"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "zod": "^4.6.7"
+  }
+}
