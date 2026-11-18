@@ -1,4 +1,45 @@
 # react-zod-fetch
+A web request framework using Zod types, with React integration.
+
+## Example:
+```tsx
+import z from "zod";
+import { NetworkResource, useNetworkJsonResource } from "react-zod-fetch";
+
+const User = z.object({
+    username: z.string(),
+    email: z.string()
+})
+
+export function UserCard({ authorization }: { authorization: string | undefined }) {
+    const user = useNetworkJsonResource({
+        url: "/api/user/me",
+        schema: User,
+        authorization
+    });
+
+    return (
+        <div>
+            { user.loading && <p>Loading...</p> }
+            { user.result && <>
+                <p>Username: { user.result.username }</p>
+                <p>Email: { user.result.email }</p>
+                <button onClick={async () => {
+                    await NetworkResource.patch("/api/user/me", {
+                        data: { username: prompt("Enter new username:") },
+                        authorization
+                    });
+                    user.reload();
+                }}>Change Username</button>
+            </> }
+            { user.error && <>
+                <p>Error while loading user</p>
+                <p>{ user.error.message }</p>
+            </> }
+        </div>
+    )
+}
+```
 
 To install dependencies:
 
@@ -6,18 +47,8 @@ To install dependencies:
 bun install
 ```
 
-To run:
+To test:
 
 ```bash
-bun run index.tsx
+bun test
 ```
-
-To type check:
-
-```bash
-bun check
-```
-
-Run `bun fmt` to format the code.
-
-This project was created using `bun init` in bun v1.4.4. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
