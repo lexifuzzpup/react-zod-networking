@@ -107,7 +107,9 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
     const [ status, setStatus ] = useState<number | null>(null);
     const [ result, setResult ] = useState<z.infer<Schema> | null>(null);
     const [ error, setError ] = useState<NetworkResource.ErrorType | null>(null);
+    
     const attempts = useRef(0);
+    useEffect(() => { attempts.current = 0 }, [ url ]);
 
     const abortControllers = useRef<Set<AbortController>>(new Set);
     useEffect(() => () => {
@@ -147,7 +149,7 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
                 setError(response.error);
             } else {
                 if(cachePrevious) setError(null);
-                
+
                 if(schema) {
                     setResult(schema.parse(response.content));
                 } else {
