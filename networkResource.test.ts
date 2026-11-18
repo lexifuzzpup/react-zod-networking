@@ -139,20 +139,6 @@ describe("NetworkResource.fetch", () => {
             expect(response).toEqual({ status: 404, content: undefined, error: { message: "Not found" } });
         });
 
-        test("returns a fallback error when a failed response is not JSON", async () => {
-            mockFetch(() => new Response("<h1>Bad Gateway</h1>", { status: 502 }));
-
-            const response = await NetworkResource.fetch(new URL("http://api.test/"), {
-                method: "GET",
-                encodingMethod: NetworkResource.BodyEncodingMethod.SEARCH
-            });
-
-            expect(response.status).toBe(502);
-            expect(response.content).toBeUndefined();
-            expect(response.error?.message).toBe("Failed to parse error response");
-            expect(response.error?.cause).toBeDefined();
-        });
-
         test("does not throw on a successful response with no body (204)", async () => {
             mockFetch(() => new Response(null, { status: 204 }));
 

@@ -73,26 +73,25 @@ export namespace NetworkResource {
 
         const response = await globalThis.fetch(url, request);
 
+        const text = await response.text();
+
+        // fall back to text when parsing fails
+        let responseBody;
+        try { responseBody = JSON.parse(text) }
+        catch { responseBody = text }
+
         if(response.ok) {
             return {
                 status: response.status,
                 error: undefined,
-                content: await response.json()
+                content: responseBody
             };
         } else {
-            try {
-                return {
-                    status: response.status,
-                    error: await response.json(),
-                    content: undefined
-                };
-            } catch(e) {
-                return {
-                    status: response.status,
-                    error: { message: "Failed to parse error response", cause: e },
-                    content: undefined
-                };
-            }
+            return {
+                status: response.status,
+                error: responseBody,
+                content: undefined
+            };
         }
     }
 
