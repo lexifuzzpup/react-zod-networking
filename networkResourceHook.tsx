@@ -146,6 +146,8 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
             if(response.error) {
                 setError(response.error);
             } else {
+                if(cachePrevious) setError(null);
+                
                 if(schema) {
                     setResult(schema.parse(response.content));
                 } else {
