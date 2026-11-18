@@ -141,7 +141,6 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
             abortControllers.current.delete(abortController);
 
             successfulFetch = true;
-
             setStatus(response.status);
             
             if(response.error) {
@@ -160,11 +159,12 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
 
             setResult(null);
             setError(null);
-            if(!successfulFetch) setStatus(null);
 
             return false;
+        } finally {
+            if(!successfulFetch) setStatus(null);
+            setLoading(false);
         }
-        setLoading(false);
 
         return true;
     }, [ cachePrevious, url, schema, authorization ]);
