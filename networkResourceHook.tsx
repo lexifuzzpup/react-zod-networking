@@ -177,6 +177,7 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
         if(!autoFetch) return;
 
         let timeoutId: number | null = null;
+        let unmounted = false;
 
         async function tryFetch() {
             attempts.current++;
@@ -193,6 +194,7 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
 
             console.error("Failed to fetch " + url + ", retrying in " + nextTimeout + "ms");
 
+            if(unmounted) return;
             timeoutId = setTimeout(tryFetch, nextTimeout) as any;
         }
 
@@ -200,6 +202,7 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
 
         return () => {
             if(timeoutId != null) clearInterval(timeoutId);
+            unmounted = true;
         }
     }, [ cachePrevious, url, schema, authorization ]);
 
