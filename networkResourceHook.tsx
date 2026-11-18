@@ -115,12 +115,13 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
             abortController.abort();
         }
         abortControllers.current.clear();
-    });
+    }, [ cachePrevious, url, schema, authorization ]);
 
     const reload = useCallback(async () => {
         for(const abortController of abortControllers.current) {
             abortController.abort();
         }
+        abortControllers.current.clear();
 
         setLoading(true);
 
@@ -134,11 +135,12 @@ export function useNetworkJsonResource<Schema extends ZodType = ZodAny>({
 
         try {
             const abortController = new AbortController;
-
+            
             abortControllers.current.add(abortController);
             const response = await NetworkResource.get(url, { authorization, signal: abortController.signal });
+            abortControllers.current.delete(abortController);
+
             successfulFetch = true;
-            abortControllers.current.delete(abortController)
 
             setStatus(response.status);
             

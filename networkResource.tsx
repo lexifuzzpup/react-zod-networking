@@ -48,7 +48,11 @@ export namespace NetworkResource {
      */
     export async function fetch(url: URL, options: FetchOptions): Promise<Response> {
         const headers: HeadersInit = {};
-        const request: RequestInit = { method: options.method, headers };
+        const request: RequestInit = {
+            method: options.method,
+            headers,
+            signal: options.signal
+        };
 
         const data = options.data ?? {};
 
