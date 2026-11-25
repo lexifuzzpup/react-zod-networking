@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import z, { ZodAny, ZodType } from "zod";
 import { NetworkResource } from "./networkResource";
 
-interface NetworkJsonResourceOptions<Schema> {
+export interface NetworkJsonResourceOptions<Schema> {
     /**
      * Properly-structured URL string to fetch from
      */
@@ -56,7 +56,7 @@ interface NetworkJsonResourceOptions<Schema> {
     authorization?: string
 }
 
-interface NetworkJsonResourceHook<Schema extends ZodType> {
+export interface NetworkJsonResourceHook<Schema extends ZodType> {
     /**
      * True when the hook is making a network request, regardless of if
      * cachePrevious is set.
